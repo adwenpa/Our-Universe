@@ -8,30 +8,62 @@
   </head>
   <body>
     <header>
-      <h1>ASTRONOMY PICTURE OF THE DAY (APOD)</h1>
-      <h2 id="title"></h2>
+      <h1 id="topHeading"></h1>
+      <h2 id="apod-title"></h2>
     </header>
 
-    <nav class="navbar" class="flex-container">
-      <a href="#">Random Day APOD</a>
-      <a href="#">Specific Day APOD</a>
+    <nav class="navbar">
+      <form id="specific">
+        <label for="specific-apod">Choose Number of APOD(s): </label>
+        <input
+          type="number"
+          name="specific-apod"
+          id="specific-apod"
+          min="1"
+          max="5"
+        />
+        <label for="start-date">Start date:</label>
+        <input
+          type="date"
+          id="start-date"
+          name="start-date"
+          value="2025-01-01"
+          min="1995-06-16"
+          max="2025-03-01"
+        />
+        <button type="submit" id="specific-btn">
+          Click to Display Specific APOD(s)
+        </button>
+      </form>
+      <form id="random">
+        <label for="random-apod">Choose Number of APOD(s): </label>
+        <input
+          type="number"
+          name="random-apod"
+          id="random-apod"
+          min="1"
+          max="5"
+        />
+        <button type="submit" id="random-btn">
+          Click to Display Random APOD(s)
+        </button>
+      </form>
     </nav>
 
     <div id="random-date"></div>
     <div id="specific-date"></div>
 
     <div class="flex-container">
-      <div>
-        <img id="apod-image" src="" alt="APOD Image" />
-      </div>
+      <div id="apod-media"></div>
 
       <div class="side">
+        <p id="date"></p>
         <p id="description"></p>
       </div>
     </div>
 
     <footer class="footer">
-      <p id="copyright">Footer</p>
+      <p id="copyright"></p>
     </footer>
     <script src="./js/apod.js"></script>
   </body>
