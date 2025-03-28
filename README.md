@@ -17,7 +17,9 @@ To run the app on your machine:
 
 1. Clone the project https://github.com/adwenpa/Our-Universe.
 
-2. You will be able to run the app from Our-Universe/public/index.html
+2. You will be able to run the app from Our-Universe/public/index.html.
+
+3. I am using node v20.18.0, express -version 4.16.1
 
 Web Development Capstone Features List 1. Choose at least two of the following:
 
