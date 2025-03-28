@@ -14,47 +14,28 @@
 
     <nav class="navbar">
       <form id="specific">
-        <label for="specific-apod">Choose Number of APOD(s): </label>
-        <input
-          type="number"
-          name="specific-apod"
-          id="specific-apod"
-          min="1"
-          max="5"
-          value="1"
-        />
-        <label for="start-date">Start date:</label>
         <input
           type="date"
-          id="start-date"
-          name="start-date"
+          id="specific-date"
+          name="specific-date"
           value="2025-01-01"
           min="1995-06-16"
-          max="2025-03-01"
         />
         <button type="submit" id="specific-btn">
-          Click to Display Specific APOD(s)
+          Click to Display Specific APOD
+        </button>
+      </form>
+      <form ">
+        <button type="submit" id="slide-btn">
+          Click to Display Slides
         </button>
       </form>
       <form id="random">
-        <label for="random-apod">Choose Number of APOD(s): </label>
-        <input
-          type="number"
-          name="random-apod"
-          id="random-apod"
-          min="1"
-          max="5"
-          value="1"
-        />
         <button type="submit" id="random-btn">
-          Click to Display Random APOD(s)
+          Click to Display Random APOD
         </button>
       </form>
     </nav>
-
-    <div id="random-date"></div>
-    <div id="specific-date"></div>
-
     <div class="flex-container">
       <div id="apod-media"></div>
 

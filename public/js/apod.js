@@ -5,11 +5,7 @@
 const apiUrl = "https://api.nasa.gov/planetary/apod?api_key=";
 const apikey = "DEMO_KEY";
 let apiQuery = apiUrl + apikey;
-let today = new Date();
-today = dateToISO(today);
-let dates = [today];
-console.log(dates);
-console.log(apiQuery);
+let today = dateToISO(new Date());
 
 const heading = document.getElementById("topHeading");
 const apodTitle = document.getElementById("apod-title");
@@ -17,39 +13,30 @@ const apodMedia = document.getElementById("apod-media");
 const apodDescription = document.getElementById("description");
 const apodDate = document.getElementById("date");
 const copyright = document.getElementById("copyright");
-const startDate = document.getElementById("start-date");
-let numApods;
+const specificDate = document.getElementById("specific-date");
 
 const randomBtn = document.getElementById("random-btn");
-const randomApod = document.getElementById("random-apod");
+const slideBtn = document.getElementById("slide-btn");
 const specificBtn = document.getElementById("specific-btn");
-const specificApod = document.getElementById("specific-apod");
-
-randomBtn.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  let numApods = parseInt(randomApod.value);
-  for (let i = 0; i < numApods; i++) {
-    dates[i] = randomDay();
-  }
-  fetchAPODs(dates);
-});
 
 specificBtn.addEventListener("click", (event) => {
   event.preventDefault();
-  let numApods = parseInt(specificApod.value);
-  let date = startDate.value;
-  let temp = addDaysToDate(date, numApods - 1);
-  if (temp > today) {
-    date = addDaysToDate(today, 1 - numApods);
-  }
-  for (let i = 0; i < numApods; i++) {
-    date = addDaysToDate(date, i);
-    date = checkDays(date);
-    dates[i] = date;
-    // dates[i] = addDaysToDate(apodStartDate, i);
-  }
-  fetchAPODs(dates);
+  let date = specificDate.value;
+  console.log(date);
+  date = checkDays(date);
+  date = dateToISO(date);
+  fetchAPOD(date);
+});
+
+slideBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  showSlides();
+});
+
+randomBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  let date = randomDay();
+  fetchAPOD(date);
 });
 
 // No APODs on June 17, 18, and 19, 1995.
@@ -59,12 +46,6 @@ function checkDays(date) {
   } else {
     return date;
   }
-}
-
-function addDaysToDate(date, days) {
-  let day = 24 * 60 * 60 * 1000;
-  let newDate = new Date(date).getTime() + days * day;
-  return dateToISO(newDate);
 }
 
 // "YYYY-MM-DD"
@@ -98,9 +79,11 @@ function playVideo(videoUrl) {
   apodMedia.appendChild(iframe);
 }
 
-function loadAPOD(data) {
+function displayAPOD(data) {
+  let maxD = dateToISO(new Date());
+  specificDate.setAttribute("max", `${maxD}`);
   const mediaUrl = data.url;
-  const altText = mediaUrl.split("/")[mediaUrl.split("/").length - 1];
+  const altText = data.title;
   heading.textContent = `ASTRONOMY PICTURE OF THE DAY (APOD) ${data.date}`;
   apodTitle.textContent = data.title;
   apodDescription.textContent = data.explanation;
@@ -108,53 +91,44 @@ function loadAPOD(data) {
     apodMedia.innerHTML = `<img src=${mediaUrl} 
   alt=${altText} />`;
   } else {
-    apodMedia.innerHTML = `<iframe 
-    width="640" 
-    height="360" 
-    src=${mediaUrl} 
-    frameborder="0" 
-    allowfullscreen 
-    ></iframe>`;
+    playVideo(mediaUrl);
   }
   if (data.hasOwnProperty("copyright")) {
     copyright.innerHTML = `<p>&copy; ${data.copyright}</p>`;
   }
 }
 
-function nextI(i, j) {
-  i = (i + 1) % j;
+function showSlides() {
+  let num = 10;
+  for (let i = 0; i < num; i++) {
+    let date = randomDay();
+    setInterval(() => {
+      fetchAPOD(date);
+    }, 10000);
+  }
 }
 
-function displayAPOD(data) {
-  /* let today = new Date();
-  today = dateToISO(today); */
-  startDate.setAttribute("max", `${today}`);
-  let num = data.length;
-
-  if (num === 1) {
-    loadAPOD(data[0]);
-  } else {
-    let i = 0;
-    while (true) {
-      loadAPOD(data[i]);
-      setInterval(nextI(i, num), 10000);
-    }
+async function fetchAPODs() {
+  let num = 5;
+  for (let i = 0; i < num; i++) {
+    let date = randomDay();
+    const response = await fetchAPOD(date);
+    const data = await response.json();
+    apods.push(data);
   }
 }
 
 async function fetchAPOD(date) {
-  const response = await fetch(`${apiQuery}&date=${date}`);
-  const apod = await response.json();
-  return apod;
-}
-
-async function fetchAPODs(dates) {
-  let apods = [];
-  for (let date of dates) {
-    const apod = await fetchAPOD(date);
-    apods.push(apod);
+  try {
+    fetch(`${apiQuery}&date=${date}`)
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        displayAPOD(json);
+      });
+  } catch (error) {
+    console.log(error);
   }
-  displayAPOD(apods);
 }
 
-fetchAPODs(dates);
+fetchAPOD(today);
